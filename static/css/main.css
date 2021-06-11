@@ -1,0 +1,438 @@
+/*body starts */
+body{
+	
+	font-family: Balsamiq Sans;
+	background-color: #f1f1f1;
+}
+a{
+	color: black !important;
+}
+.side-close{
+	float: right;
+	font-size:25px;
+	color: white;
+	margin: 10px;
+	cursor: pointer;
+}
+#map{
+	height: 300px;
+}
+/*body ends*/
+
+/*dropdown starts*/
+	
+.dropdown{
+	font-size:30px;
+	color: white;
+	cursor: pointer;
+}
+.dropdown:hover + .dropdown-panel{
+	display: block;
+}
+			
+.dropdown-panel:hover{
+	display: block;
+}
+.dropdown-panel{
+	width:200px;
+	height:auto;
+	position: absolute;
+	top:45px;
+	right:10px;
+	z-index:1;
+	background-color: white;
+	-webkit-box-shadow: 0 0 5px 2px gray;
+	-moz-box-shadow: 0 0 5px 2px gray;
+	box-shadow: 0 0 5px 2px gray;
+	display: none;
+}
+.dropdown-panel-list{
+	font-size: 16px;
+	padding: 10px 20px;
+	color: gray;
+}
+.dropdown-panel-list a{
+	color: black;
+	margin:5px 10px;
+}
+
+/*dropdown ends*/
+
+/* mobile starts */
+
+.mobile{
+	
+	background-color: #283E4A;
+	width: 100%;
+	color: white;
+}
+.back-btn{
+	color: white;
+	margin: 20px;
+	float: left;
+}
+.section-mobile{
+	padding: 20px;
+	background-color: white;
+}
+/* mobile ends*/
+
+/*login starts*/
+.login-panel{
+	
+	margin-top: 50px;
+	border: 1px solid #f1f1f1;
+	padding: 15px;
+	border-radius: 10px; 
+}
+.login-header{
+	width: 100%;
+	margin-bottom: 20px;
+	font-size: 20px;
+}
+.login-body input{
+	height: 50px;
+	
+}
+.login-body input:hover{
+	border: 1px solid black;
+	
+}
+.login-body input:focus{
+	border: 1px solid black;
+	box-shadow: none;
+}
+.login-logo{
+	width:70%;
+	margin-top: 20px;
+	text-align: center;
+}
+.logo-img{
+	width: 100px;
+	height: 100px;
+	margin: 5px 35%;
+}
+.login-footer{
+	color: gray;
+	margin-top: 20px;	
+	
+}
+/*login ends*/
+
+/*popup starts */
+
+.popup{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top:0px;
+	left: 0px;
+	z-index: 3;
+	background-color: rgba(35,35,35,0.3);
+	display: none;
+}
+.popup-panel{
+	background-color: white;
+	margin-top: 100px;
+	height: 500px;
+	border-radius: 10px;
+}
+.popup-header{
+	background-color: #283E4A;
+	color: white;
+	height: 50px;	
+}
+.popup-header div{
+	float: left;
+	margin: 15px;
+}
+.popup-body{
+	padding: 20px;
+	overflow-y: scroll;
+	width: 100%;
+	height: 420px;
+}
+/* popup ends */
+/*header starts */
+
+header{
+	width: 100%;
+	height: 50px;
+	background-color: #283E4A;
+	position: fixed;
+	top:0px;
+	left:0px;
+	 -webkit-box-shadow: 0 0 5px 2px gray;
+	-moz-box-shadow: 0 0 5px 2px gray;
+	box-shadow: 0 0 5px 2px gray;
+	z-index: 1;
+}
+
+.menu-icon{
+	font-size:25px;
+	margin: 8px 15%;
+	color: white;
+	cursor: pointer;
+}
+.menu-text{
+	color: white;
+	margin: 8px 5%;
+	font-size: 20px;
+}
+.submenu-icon{
+	color: white;
+	margin: 8px 8%;
+	font-size: 25px;
+	float: right;
+}
+.header-icon{
+	font-size:18px;
+	margin: 15px 15px;
+	color: white;
+	cursor: pointer;
+	float: right;
+}
+/* header ends*/
+
+/*nav starts*/
+
+#nav{
+	display: none;
+}
+nav{
+	position: absolute;
+	top:0px;
+	left: 0px;
+	width:100%;
+	height: 100%;
+	z-index:2;
+	background-color: rgba(36,36,36,0.5);
+	display: block;
+}
+.nav-show{
+	float: left;
+	width: 300px;
+	height: 100%;
+}
+.nav-hide{
+	float: left;
+	
+}
+.nav-panel{
+	width:300px;
+	height: 100%;
+	background-color: white;
+}
+.nav-header{
+	background-color: #283E4A;
+	color: white;
+	height: 50px;
+}
+.nav-header-heading{
+	float: left;
+	margin: 15px;
+}
+.nav-list{
+	float: left;
+	width:100%;
+	border-bottom: 1px solid #c0c0c0;
+	padding: 10px;
+	list-style-type: none;
+	padding-left: 20px;
+	cursor: pointer;
+}
+nav ul{
+	padding:0px;
+}
+.nav-list a{
+	color: black;
+}
+.nav-list a:hover{
+	color: gray;
+	text-decoration-line: none;
+}
+.version{
+	position: absolute;
+	bottom: 10px;
+	text-align: center;
+	width: 300;
+	
+}
+/*nav ends*/
+/*switch starts*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.switch input:checked + .slider {
+  background-color: #2196F3;
+}
+
+.switch input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+.switch input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+/* switch ends */
+/*section starts*/
+#section{
+	margin-top: 60px;
+}
+#table{
+	margin-top: 20px;
+}
+section{
+	width: 100%;
+	height: 100vh;
+	background-color: #f1f1f1;
+	padding: 10px;
+	margin-top: 100px;
+}
+.app-section{
+	margin-top: 80px;
+}
+.app-container{
+	background-color: white;
+	padding: 10px;
+	border-radius: 10px;
+}
+.section-panel{
+	padding: 10px;
+	background-color: white;
+	
+}
+.action-panel button
+{
+	margin: 20px;
+	float:right;
+}
+/*section ends*/
+
+/*dashboardPanel starts */
+	.dashboard-panel{
+		width:100%;
+		height: 100%;
+	}
+
+/*dashboardPanel ends */
+
+
+/*category starts*/
+
+.category-img{
+	width: 50px;
+	height: 50px;
+	float: left;
+}
+.slider-img{
+	width:300px;
+	height: 100px;
+}
+.catgeory-radio-panel{
+	width: 100%;
+	float: left;
+	margin: 5px 5px;
+}
+.category-radio-input{
+	padding: 10px;
+	float: left;
+	width: 20%; 
+	height: 20px;
+	margin: 5px;
+}
+.category-radio{
+	float: left;
+	width: 80%;
+	height: 100px;
+}
+.category-radio-name{
+	float: left;
+}
+/*category ends*/
+
+/*other*/
+
+.search-input{
+	width: 150px;
+	float: left;
+	margin: 10px;
+}
+.offer-img{
+	width: 100px;
+	height: 100px;
+}
+/*other ends*/
+
+/* popup starts */
+
+#popup{
+	width: 100%;
+	height: 100% !important;
+	background-color: rgba(115,115,115, 0.3);
+	z-index: 3;
+	position: fixed;
+	top: 0px;
+	height: 0px;
+	display: none;
+}
+.popup-panel{
+	
+	border: 1px solid #f1f1f1;
+	margin: 80px 0px;
+}	
+.popup-close{
+	float: right;
+	cursor: pointer;
+}
+.popup-body{
+	padding: 10px;
+}
+/* popup ends*/

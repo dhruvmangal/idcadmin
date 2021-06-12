@@ -167,8 +167,18 @@ class Oneway{
 		var deleteOnewayFair= this.deleteOnewayFair;
 		var fairRender = this.fairRender;
 		var fairTable =this.fairTable;
-
+		
 		/* oneway fair ends*/
+		var addOnewayNote= this.addOnewayNote;
+		var createOnewayNote = this.createOnewayNote;
+		var getOnewayNote = this.getOnewayNote;
+		var updateOnewayNote= this.updateOnewayNote;
+		var deleteOnewayNote= this.deleteOnewayNote;
+		var noteRender = this.noteRender;
+		var noteTable =this.noteTable;
+		/* oneway note starts */
+		
+		/* oneway note ends*/
 		var getCabs = this.getCabs;
 		/* icons */
 		var statusIcon= function(cell, formatterParams){
@@ -200,7 +210,7 @@ class Oneway{
 				
 			data: this.data,           //load row data from array
 			layout:"fitData",      //fit columns to width of table
-				
+			selectable:true,		
 			tooltips:true,            //show tool tips on cells
 			addRowPos:"top",          //when adding a new row, add it to the top of the table
 			history:true,             //allow undo and redo actions on the table
@@ -212,6 +222,7 @@ class Oneway{
 				{column:"Title", dir:"asc"},
 			],
 			columns:[                 //define the table columns
+				{title: "Select"},
 				{title:"Origin", field:"origin", editor: 'input', cellEdited: function(row, cell){update(row, 'origin')}},
 				{title:"Destination", field:"destination", editor: 'input', cellEdited: function(row, cell){update(row, 'destination')}},
 				{title:"Kilometers", field:"km", editor: 'input', cellEdited: function(row, cell){update(row, 'km')}},
@@ -225,8 +236,19 @@ class Oneway{
 				{formatter: plusIcon, title:"Add Fair", cellClick: function(row, cell){addOnewayFair(cell.getRow().getData().id);   document.getElementById('addOnewayFairForm').addEventListener('submit', function(){createOnewayFair();}); }   },
 				{title:"View Fair", formatter: eyeIcon, cellClick: function(row, cell){$.when(fairRender(cell.getRow().getData().id)).then(fairTable(getOnewayFair, updateOnewayFair, deleteOnewayFair))}},
 				
+				{formatter: plusIcon, title:"Add Note", cellClick: function(row, cell){addOnewayNote(cell.getRow().getData().id);   document.getElementById('addOnewayNoteForm').addEventListener('submit', function(){createOnewayNote();}); }   },
+				{title:"View Note", formatter: eyeIcon, cellClick: function(row, cell){$.when(noteRender(cell.getRow().getData().id)).then(noteTable(getOnewayNote, updateOnewayNote, deleteOnewayNote))}},
+				
 				{title:"delete", formatter: trashIcon, cellClick: function(e, cell, row){del(cell.getRow().getData().id); cell.getRow().delete();}},
 			],
+			
+			
+			 rowSelectionChanged:function(data, rows){
+				//update selected row counter on selection change
+				$("#select-stats span").text(data.length);
+				//console.log(data);
+			},
+	
 		});
 	}
 		
@@ -493,7 +515,7 @@ class Oneway{
 			{'<>': 'form', 'id': 'addOnewayFairForm', 'enctype': 'multipart/form-data', 'html': [
 				{'<>': 'br'},
 				{'<>': 'input', 'type': 'hidden', 'name': 'id', 'value': function(){ return id;}},
-				{'<>': 'label', 'for': 'title', 'html': 'Base Fair'},
+				{'<>': 'label', 'for': 'title', 'html': 'Fair'},
 				{'<>': 'input', 'type':'number', 'name': 'base_fair', 'id': 'base_fair', 'class': 'form-control', 'placeholder': '', 'required': 'required' },
 				{'<>': 'br'},
 				
@@ -501,11 +523,11 @@ class Oneway{
 				{'<>': 'input', 'type': 'number', 'name': 'toll_tax', 'id': 'toll_tax', 'class': 'form-control', 'placeholder': 'Price', 'required': 'required'},
 				{'<>': 'br'},
 				
-				{'<>': 'label', 'for': 'title', 'html': 'Fuel Charge'},
-				{'<>': 'input', 'type': 'number', 'name': 'fuel_charge', 'id': 'fuel_charge', 'class': 'form-control', 'placeholder': 'Price', 'required': 'required'},
+				
+				{'<>': 'input', 'type': 'hidden', 'name': 'fuel_charge', 'id': 'fuel_charge', 'value':'0', 'class': 'form-control', 'placeholder': 'Price', 'required': 'required'},
 				{'<>': 'br'},
 				
-				{'<>': 'label', 'for': 'title', 'html': 'KMs Charge'},
+				{'<>': 'label', 'for': 'title', 'html': 'Extra KMs'},
 				{'<>': 'input', 'type': 'number', 'name': 'kms_charge', 'id': 'kms_charge', 'class': 'form-control', 'placeholder': 'Price', 'required': 'required'},
 				{'<>': 'br'},
 				
@@ -517,7 +539,7 @@ class Oneway{
 				{'<>': 'input', 'type': 'number', 'name': 'parking', 'id': 'parking', 'class': 'form-control', 'placeholder': 'Price', 'required': 'required'},
 				{'<>': 'br'},
 				
-				{'<>': 'label', 'for': 'title', 'html': 'Pickup'},
+				{'<>': 'label', 'for': 'title', 'html': 'Pickup / Drop'},
 				{'<>': 'input', 'type': 'number', 'name': 'pickup', 'id': 'pickup', 'class': 'form-control', 'placeholder': 'Price', 'required': 'required'},
 				{'<>': 'br'},
 				
@@ -558,6 +580,15 @@ class Oneway{
 				return "INACTIVE";
 			}
 		};
+		var tollTaxIcon= function(cell, formatterParams){
+			if(cell.getData().status==1){
+				return 'INCLUDED';
+			}
+			
+			else{
+				return "EXCLUDED";
+			}
+		};
 		var trashIcon= function(cell, formatterParams){
 			return "<i class='fa fa-trash'></i>";
 		};
@@ -578,6 +609,168 @@ class Oneway{
 				
 			data: data,           //load row data from array
 			layout:"fitData",      //fit columns to width of table
+			selectable:true,	
+			tooltips:true,            //show tool tips on cells
+			addRowPos:"top",          //when adding a new row, add it to the top of the table
+			history:true,             //allow undo and redo actions on the table
+			pagination:"local",       //paginate the data
+			paginationSize:9,         //allow 7 rows per page of data
+			movableColumns:true,      //allow column order to be changed
+			resizableRows:true,       //allow row order to be changed
+			initialSort:[             //set the initial sort order of the data
+				{column:"Title", dir:"asc"},
+			],
+			columns:[                 //define the table columns
+				{title:"Select"},
+				{title:"Fair", field:"base_fair", editor: 'input', cellEdited: function(row, cell){update(row, 'base_fair')}},
+				{title:"Toll Tax", field:"toll_tax", formatter: tollTaxIcon, editor: 'select', editorParams: {'1': 'INCLUDED', '0': 'EXCLUDED'}, cellEdited: function(row, cell){update(row, 'toll_tax')}},
+				{title:"Extra KMs", field:"kms_charge", editor: 'input', cellEdited: function(row, cell){update(row, 'kms_charge')}},
+				{title:"Driver Allowance", field:"kms_charge", formatter: tollTaxIcon, editor: 'select', editorParams: {'1': 'INCLUDED', '0': 'EXCLUDED'}, cellEdited: function(row, cell){update(row, 'driver_allowance')}},
+				{title:"Parking", field:"parking", editor: 'input', cellEdited: function(row, cell){update(row, 'parking')}},
+				{title:"Pickup / Drop", field:"pickup", editor: 'input', cellEdited: function(row, cell){update(row, 'pickup')}},
+				{title:"Others", field:"other", editor: 'input', cellEdited: function(row, cell){update(row, 'other')}},
+				{title:"delete", formatter: trashIcon, cellClick: function(e, cell, row){del(cell.getRow().getData().id); cell.getRow().delete();}},
+			],
+		});
+	}
+
+
+
+	createOnewayNote(){
+		event.preventDefault();
+		var myForm= document.getElementById('addOnewayNoteForm');
+		let formData= new FormData(myForm);
+		formData.append('token', localStorage.getItem('admin'));
+		$.ajax({
+			type:"POST",
+			url:'../pot/onewaynote/create/',
+			data: formData,
+			
+			processData: false,
+			contentType: false,
+			beforeSend: function(){
+				alert('processing');
+			},
+			success: function(result){
+				var res= JSON.parse(result);
+				if(res['flag']==true){
+					document.getElementById('popup').style.display= 'none';
+					//alert('Oneway has been added');
+					window.reload();
+				}
+			}
+		});
+	}
+	getOnewayNote(){
+		var val='';
+		$.ajax({
+			async: false,
+			type: 'POST',
+			url: '../pot/onewaynote/view/',
+			data: {'token': localStorage.getItem('admin'), 'status': '1'},
+			success: function(res){
+				
+				val = res;
+			}
+		})
+		return val;
+	}
+	updateOnewayNote(row, name){
+		var arr= row.getData();
+		console.log(arr);
+		
+		$.ajax({
+			type:"POST",
+			
+			url:'../pot/onewaynote/update/',
+			data: {'id': arr['id'], [name] : arr[name], 'token':localStorage.getItem('admin')},
+			//dataType: 'json',
+			//processData: false,
+			//contentType: false,
+			success: function(result){
+				if(result['result']==true){
+					
+				}	
+			}
+		})
+	}
+	deleteOnewayNote(id){
+		$.ajax({
+			async: false,
+			type: 'POST',
+			url: '../pot/onewaynote/delete/',
+			data: {'token': localStorage.getItem('admin'), 'id': id},
+			success: function(res){
+				var result= JSON.parse(res);
+				if(result['auth'] == true && result['data'] == true){
+					//alert('Slider Deleted Successfully');
+					//table.updateData(this.viewSlider());
+				}
+			}
+		})
+	}
+	addOnewayNote(id){
+		let transform= {'<>': 'div', 'class': 'popup-container', 'html': [
+			{'<>': 'form', 'id': 'addOnewayNoteForm', 'enctype': 'multipart/form-data', 'html': [
+				{'<>': 'br'},
+				{'<>': 'input', 'type': 'hidden', 'name': 'id', 'value': function(){ return id;}},
+				{'<>': 'label', 'for': 'title', 'html': 'Note'},
+				{'<>': 'input', 'type':'text', 'name': 'note', 'id': 'note', 'class': 'form-control', 'placeholder': '', 'required': 'required' },
+				{'<>': 'br'},
+				
+				{'<>': 'input', 'type': 'submit', 'class': 'btn btn-primary form-control', 'value': 'Add'}
+			]}
+		]};
+		var doc =  (json2html.transform({},transform));
+		document.getElementById('popupBody').innerHTML= doc;
+		document.getElementById('popup').style.display= 'block';
+		
+	}
+	
+	noteRender(){
+		let transform= {'<>': 'div', 'id': 'noteTable'};
+		var doc =  (json2html.transform({},transform));
+		document.getElementById('popupBody').innerHTML= doc;
+		document.getElementById('popup').style.display= 'block';
+	}	
+	
+	noteTable(get, update, del){
+		var cabs =get();
+		var tbData= JSON.parse(cabs);
+		
+		var data= tbData['data'];
+		
+		
+		/* icons */
+		var statusIcon= function(cell, formatterParams){
+			if(cell.getData().status==1){
+				return 'ACTIVE';
+			}
+			
+			else{
+				return "INACTIVE";
+			}
+		};
+		var trashIcon= function(cell, formatterParams){
+			return "<i class='fa fa-trash'></i>";
+		};
+		var eyeIcon= function(cell, formatterParams){
+			return "<i class='fa fa-eye'></i>";
+		};
+		var plusIcon= function(cell, formatterParams){
+			return "<i class='fa fa-plus'></i>";
+		};
+		var imageIcon= function(cell, formatterParams){
+			return "<img class= 'slider-img' src='../pot/view/"+cell.getData().image+"'></i>";
+		};
+		 this.table = new Tabulator("#noteTable", {
+				
+			downloadRowRange: 'all',
+			reactiveData:true,
+			height: 500,
+				
+			data: data,           //load row data from array
+			layout:"fitData",      //fit columns to width of table
 				
 			tooltips:true,            //show tool tips on cells
 			addRowPos:"top",          //when adding a new row, add it to the top of the table
@@ -590,19 +783,13 @@ class Oneway{
 				{column:"Title", dir:"asc"},
 			],
 			columns:[                 //define the table columns
-				{title:"Base Fair", field:"base_fair", editor: 'input', cellEdited: function(row, cell){update(row, 'base_fair')}},
-				{title:"Toll Tax", field:"toll_tax", editor: 'input', cellEdited: function(row, cell){update(row, 'toll_tax')}},
-				{title:"Fuel Charge", field:"fuel_charge", editor: 'input', cellEdited: function(row, cell){update(row, 'fuel_charge')}},
-				{title:"KMs Charge", field:"kms_charge", editor: 'input', cellEdited: function(row, cell){update(row, 'kms_charge')}},
-				{title:"Driver Allowance", field:"kms_charge", editor: 'input', cellEdited: function(row, cell){update(row, 'driver_allowance')}},
-				{title:"Parking", field:"parking", editor: 'input', cellEdited: function(row, cell){update(row, 'parking')}},
-				{title:"Pickup", field:"pickup", editor: 'input', cellEdited: function(row, cell){update(row, 'pickup')}},
-				{title:"Others", field:"other", editor: 'input', cellEdited: function(row, cell){update(row, 'other')}},
+				{title:"Note", field:"note", editor: 'input', cellEdited: function(row, cell){update(row, 'note')}},
+				{title:"Status", field:"status", formatter: statusIcon, editor: 'select', editorParams: {'1': 'ACTIVE', '0': 'INACTIVE'}, cellEdited: function(row, cell){update(row, 'status')}},
+				
 				{title:"delete", formatter: trashIcon, cellClick: function(e, cell, row){del(cell.getRow().getData().id); cell.getRow().delete();}},
 			],
 		});
 	}
-	
 }
 
 export {Oneway};
